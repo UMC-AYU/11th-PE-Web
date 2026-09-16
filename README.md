@@ -18,9 +18,9 @@ UMC AYU 11th PE-Web Git 사용 방법입니다.
 11th-PE-Web
 └ leon
     └ week1
-        └ mission 1
-        └ mission 2
-        └ mission 3
+        └ mission1
+        └ mission2
+        └ mission3
 ```
 
 <br>

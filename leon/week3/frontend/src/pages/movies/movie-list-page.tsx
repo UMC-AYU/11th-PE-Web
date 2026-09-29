@@ -8,9 +8,9 @@ export function MovieListPage() {
   const { movies, toggleBookmark } = useMovies();
 
   return (
-    <main className="flex-1 bg-[#f7f8fa] py-[26px] pb-14">
+    <main className="flex-1 bg-[#f7f8fa] py-5 pb-10 sm:py-[26px] sm:pb-14">
       <div className="mx-auto w-[min(1280px,calc(100%-160px))] max-lg:w-[calc(100%-48px)] max-sm:w-[calc(100%-32px)]">
-        <h1 className="mt-0 mb-[22px] text-[34px] leading-[1.3] font-extrabold tracking-[-1.8px] text-[#17191f]">
+        <h1 className="mt-0 mb-[18px] text-[28px] leading-[1.3] font-extrabold tracking-[-1.4px] text-[#17191f] sm:mb-[22px] sm:text-[34px] sm:tracking-[-1.8px]">
           영화 목록
         </h1>
         <MovieGrid movies={movies} onToggleBookmark={toggleBookmark} />

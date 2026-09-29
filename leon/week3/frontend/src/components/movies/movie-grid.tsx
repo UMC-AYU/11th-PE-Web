@@ -9,7 +9,7 @@ interface MovieGridProps {
 export function MovieGrid({ movies, onToggleBookmark }: MovieGridProps) {
   return (
     <section
-      className="grid grid-cols-5 gap-x-[18px] gap-y-[21px] max-lg:grid-cols-3 max-sm:grid-cols-2"
+      className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-[18px] xl:gap-y-[21px]"
       id="movie-list"
       aria-label="영화 목록"
     >

@@ -3,7 +3,11 @@ import { cn } from "../../utils/cn";
 
 export function Header() {
   const pathname = useLocation({ select: (location) => location.pathname });
-  const isMovieRoute = pathname === "/" || pathname.startsWith("/movies/");
+  const activeMenu = pathname === "/search"
+    ? "search"
+    : pathname === "/" || pathname.startsWith("/movies/")
+      ? "movies"
+      : null;
   const focusRing =
     "focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[rgba(47,108,229,0.35)]";
 
@@ -34,25 +38,25 @@ export function Header() {
           <Link
             className={cn(
               "py-[30px] text-[15px] leading-[26px] font-bold text-[#616875] no-underline",
-              isMovieRoute &&
+              activeMenu === "movies" &&
                 "text-[#17191f] underline decoration-1 underline-offset-5",
               focusRing,
             )}
             to="/"
-            aria-current={isMovieRoute ? "page" : undefined}
+            aria-current={activeMenu === "movies" ? "page" : undefined}
           >
             영화
           </Link>
           <Link
             className={cn(
               "py-[30px] text-[15px] leading-[26px] font-bold text-[#616875] no-underline",
-              pathname === "/search" &&
+              activeMenu === "search" &&
                 "text-[#17191f] underline decoration-1 underline-offset-5",
               focusRing,
             )}
             to="/search"
             search={{ query: "" }}
-            aria-current={pathname === "/search" ? "page" : undefined}
+            aria-current={activeMenu === "search" ? "page" : undefined}
           >
             검색
           </Link>

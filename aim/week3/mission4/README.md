@@ -29,3 +29,10 @@ POST http://localhost:8080/rentals
 - rented_at은 NOW()로 현재 시간 저장
 - due_at은 DATE_ADD(NOW(), INTERVAL 7 DAY)로 7일 뒤 날짜 저장
 - userId, bookId는 파라미터 바인딩으로 안전하게 전달
+
+## 프로젝트 위치
+
+[공통 Spring Boot 프로젝트](../mission3/11th_study)
+
+미션4의 코드는 미션3 폴더 안의 공통 프로젝트에 포함되어 있습니다.
+관련 코드는 RentalController, RentalService, RentalRepository입니다.

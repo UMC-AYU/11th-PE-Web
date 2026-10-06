@@ -26,3 +26,10 @@ WHERE category_id = ?;
 - Repository에서 Raw SQL 작성
 - JdbcTemplate.queryForList()로 조회
 - 파라미터 바인딩을 사용해 categoryId를 안전하게 전달
+- 
+## 프로젝트 위치
+
+[Spring Boot 프로젝트](./11th_study)
+
+미션3과 미션4는 하나의 Spring Boot 프로젝트에 구현되어 있습니다.
+미션3 관련 코드는 BookController, BookService, BookRepository입니다.

@@ -1,0 +1,60 @@
+// 1. 회원 역할(Role) 타입 정의
+type MemberRole = "leader" | "member";
+
+// 2. 스터디 회원 인터페이스 정의
+interface StudyMember {
+  id: number;
+  name: string;
+  role: MemberRole;
+  githubId?: string; // 옵셔널 프로퍼티
+}
+
+// 3. 회원 객체 생성
+const member1: StudyMember = {
+  id: 1,
+  name: "광수",
+  role: "leader",
+  githubId: "gwangsoo-dev",
+};
+
+const member2: StudyMember = {
+  id: 2,
+  name: "지수",
+  role: "member",
+};
+
+// 4. 회원 목록 배열 생성 (한 번만 선언!)
+const members: StudyMember[] = [member1, member2];
+
+// 5. 회원 ID로 안내 문구를 만드는 함수
+function getMemberNotice(id: number): string {
+  const foundMember = members.find((member) => member.id === id);
+
+  if (!foundMember) {
+    return "존재하지 않는 회원입니다.";
+  }
+
+  const githubText = foundMember.githubId ?? "등록되지 않음";
+  const roleText =
+    foundMember.role === "leader"
+      ? "스터디를 이끌어요."
+      : "스터디에 참여해요.";
+
+  return `${foundMember.name} 회원님 (${roleText}) - GitHub: ${githubText}`;
+}
+
+// 6. ID로 회원 정보 자체를 찾는 함수
+function findMemberById(id: number): StudyMember | undefined {
+  return members.find((member) => member.id === id);
+}
+
+// 7. 필수 미션 요구사항 테스트 (ID 1, 2, 999)
+console.log("--- 안내 문구 테스트 ---");
+console.log(getMemberNotice(1));   // 광수
+console.log(getMemberNotice(2));   // 지수
+console.log(getMemberNotice(999)); // 존재하지 않는 회원
+
+console.log("\n--- 회원 검색 테스트 ---");
+console.log(findMemberById(1));   // 광수 정보
+console.log(findMemberById(2));   // 지수 정보
+console.log(findMemberById(999)); // undefined

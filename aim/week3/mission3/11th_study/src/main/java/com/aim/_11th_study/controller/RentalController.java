@@ -1,0 +1,21 @@
+package com.aim._11th_study.controller;
+
+import com.aim._11th_study.service.RentalService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/rentals")
+@RequiredArgsConstructor
+
+public class RentalController {
+    private final RentalService rentalService;
+
+    @PostMapping
+    public String createRental (@RequestBody Map<String, Object> body){
+        rentalService.createRental(body);
+        return "도서 대여 기록이 생성되었습니다.";
+    }
+}

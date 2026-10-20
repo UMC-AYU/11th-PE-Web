@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: UMC11thSpring5week
+  datasource:
+    url: jdbc:mysql://localhost:3306/UMC5week
+    username: root
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+app:
+  cors:
+    allowed-origins: http://localhost:5173

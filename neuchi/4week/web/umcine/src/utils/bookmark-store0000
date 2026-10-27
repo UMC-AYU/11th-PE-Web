@@ -1,0 +1,28 @@
+// src/utils/bookmark-storage.ts
+
+const BOOKMARK_STORAGE_KEY = "umcine-bookmarks";
+
+export function readBookmarkIds(): number[] {
+  const storedValue = localStorage.getItem(BOOKMARK_STORAGE_KEY);
+  if (!storedValue) return [];
+
+  try {
+    const parsedValue: unknown = JSON.parse(storedValue);
+
+    // 1. 배열이 아닌 경우 빈 배열 반환
+    if (!Array.isArray(parsedValue)) return [];
+
+    // 2. 배열 요소 중 양의 정수인 영화 ID만 필터링
+    return parsedValue.filter(
+      (movieId): movieId is number =>
+        typeof movieId === "number" && Number.isInteger(movieId) && movieId > 0,
+    );
+  } catch {
+    // JSON 형식이 깨져 parsing 에러가 발생하면 빈 배열 반환
+    return [];
+  }
+}
+
+export function saveBookmarkIds(movieIds: number[]) {
+  localStorage.setItem(BOOKMARK_STORAGE_KEY, JSON.stringify(movieIds));
+}

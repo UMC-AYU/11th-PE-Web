@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   getPopularMovies,
+  isTmdbConfigured,
   posterUrl,
   type TmdbMovie,
 } from "../../api/tmdb";
@@ -13,6 +14,8 @@ export function MovieListPage() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    if (!isTmdbConfigured) return;
+
     let ignore = false;
 
     getPopularMovies()
@@ -35,7 +38,9 @@ export function MovieListPage() {
     <main className="mx-auto max-w-7xl px-6 py-12 text-white">
       <h1 className="mb-8 text-4xl font-bold">인기 영화</h1>
 
-      {loading ? (
+      {!isTmdbConfigured ? (
+        <p>TMDB 설정이 필요해요. .env.local에 VITE_TMDB_ACCESS_TOKEN을 설정하고 개발 서버를 다시 시작해 주세요.</p>
+      ) : loading ? (
         <p>영화 목록을 불러오는 중이에요.</p>
       ) : error ? (
         <p>영화 목록을 불러오지 못했어요.</p>
@@ -75,11 +80,6 @@ export function MovieListPage() {
           ))}
         </div>
       )}
-
-      <p className="mt-12 text-xs text-zinc-500">
-        영화 정보 제공: TMDB (The Movie Database).
-        이 서비스는 TMDB의 승인이나 보증을 받지 않았습니다.
-      </p>
     </main>
   );
 }

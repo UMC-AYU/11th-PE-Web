@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import {
   searchMovies,
+  isTmdbConfigured,
   posterUrl,
   type TmdbMovie,
 } from "../../api/tmdb";
@@ -10,30 +11,21 @@ import { BookmarkButton } from "../../components/bookmark-button";
 
 export function SearchPage() {
   const { query } = useSearch({ from: "/search" });
+  return <SearchView key={query ?? ""} query={query ?? ""} />;
+}
+
+function SearchView({ query }: { query: string }) {
   const navigate = useNavigate({ from: "/search" });
 
   const [input, setInput] = useState(query ?? "");
   const [movies, setMovies] = useState<TmdbMovie[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Boolean(query.trim()) && isTmdbConfigured);
   const [error, setError] = useState(false);
-
-  useEffect(() => {
-    setInput(query ?? "");
-  }, [query]);
 
   useEffect(() => {
     let ignore = false;
 
-    if (!query?.trim()) {
-      setMovies([]);
-      setLoading(false);
-      setError(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(false);
-    setMovies([]);
+    if (!query.trim() || !isTmdbConfigured) return;
 
     searchMovies(query)
       .then((data) => {
@@ -74,7 +66,9 @@ export function SearchPage() {
         </button>
       </form>
 
-      {!query?.trim() ? (
+      {!isTmdbConfigured ? (
+        <p>TMDB 설정이 필요해요. .env.local에 VITE_TMDB_ACCESS_TOKEN을 설정하고 개발 서버를 다시 시작해 주세요.</p>
+      ) : !query.trim() ? (
         <p>검색어를 입력해 주세요.</p>
       ) : loading ? (
         <p>검색 중이에요.</p>
@@ -128,11 +122,6 @@ export function SearchPage() {
           ))}
         </div>
       )}
-
-      <p className="mt-12 text-xs text-zinc-500">
-        영화 정보 제공: TMDB (The Movie Database).
-        이 서비스는 TMDB의 승인이나 보증을 받지 않았습니다.
-      </p>
     </main>
   );
 }

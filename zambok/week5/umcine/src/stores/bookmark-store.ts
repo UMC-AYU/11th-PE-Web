@@ -19,7 +19,8 @@ export const useBookmarkStore = create<BookmarkStore>()(
         })),
     }),
     {
-      name: "umcine-bookmark-store",
+      // 샘플 영화 ID와 TMDB 영화 ID의 저장 공간을 분리한다.
+      name: "umcine-tmdb-bookmark-store",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         bookmarkedMovieIds: state.bookmarkedMovieIds,

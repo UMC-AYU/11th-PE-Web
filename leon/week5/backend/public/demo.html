@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UMCine API 확인 화면</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, sans-serif; color: #182033; background: #f4f6fa; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 1100px; margin: 0 auto; padding: 48px 22px 80px; }
+    h1 { font-size: 32px; margin: 0 0 8px; }
+    .intro { color: #5b6475; margin: 0 0 28px; }
+    .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+    article { background: white; border: 1px solid #e2e7ef; border-radius: 16px; padding: 22px; box-shadow: 0 6px 22px #1722380a; }
+    h2 { margin: 0 0 6px; font-size: 19px; }
+    .endpoint { font: 12px ui-monospace, monospace; color: #57657a; margin: 0 0 22px; overflow-wrap: anywhere; }
+    label { display: block; font-weight: 650; font-size: 13px; margin-bottom: 7px; }
+    .controls { display: flex; gap: 8px; }
+    input { min-width: 0; flex: 1; padding: 10px 12px; border: 1px solid #cbd3df; border-radius: 8px; font: inherit; }
+    button { border: 0; background: #245bdb; color: white; padding: 10px 14px; border-radius: 8px; font: inherit; font-weight: 650; cursor: pointer; white-space: nowrap; }
+    button:hover { background: #1749b9; }
+    .result { margin: 17px 0 0; min-height: 94px; padding: 13px; border-radius: 9px; background: #f1f4f8; font: 13px/1.55 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .status { font-size: 13px; color: #697385; margin: 9px 0 0; }
+    .hint { margin-top: 24px; color: #5b6475; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>UMCine API 확인 화면</h1>
+    <p class="intro">이 화면은 백엔드와 다른 포트에서 실행됩니다. 세 카드 모두 실제 NestJS API에 요청합니다.</p>
+    <div class="grid">
+      <article>
+        <h2>실습 1 · 닉네임 중복 확인</h2>
+        <p class="endpoint">GET /members/nickname/{nickname}</p>
+        <form data-kind="nickname">
+          <label for="nickname">닉네임</label>
+          <div class="controls"><input id="nickname" value="수현" required><button type="submit">확인</button></div>
+        </form>
+        <p class="status" id="nickname-status">대기 중</p>
+        <pre class="result" id="nickname-result">응답을 기다리는 중</pre>
+      </article>
+      <article>
+        <h2>실습 2 · 이메일 중복 확인</h2>
+        <p class="endpoint">GET /members/email/{email}</p>
+        <form data-kind="email">
+          <label for="email">이메일</label>
+          <div class="controls"><input id="email" type="email" value="noco@umc.com" required><button type="submit">확인</button></div>
+        </form>
+        <p class="status" id="email-status">대기 중</p>
+        <pre class="result" id="email-result">응답을 기다리는 중</pre>
+      </article>
+      <article>
+        <h2>실습 3 · 유저별 평점 조회</h2>
+        <p class="endpoint">GET /members/{memberId}/ratings</p>
+        <form data-kind="ratings">
+          <label for="ratings">유저 ID</label>
+          <div class="controls"><input id="ratings" type="number" min="1" step="1" value="1" required><button type="submit">조회</button></div>
+        </form>
+        <p class="status" id="ratings-status">대기 중</p>
+        <pre class="result" id="ratings-result">응답을 기다리는 중</pre>
+      </article>
+    </div>
+    <p class="hint">워크북 캡처: 버튼을 누른 뒤 개발자 도구 Network 탭에서 세 요청과 응답을 함께 확인하세요.</p>
+  </main>
+  <script>
+    const apiBase = 'http://localhost:3000';
+    async function request(kind) {
+      const field = document.getElementById(kind);
+      const status = document.getElementById(`${kind}-status`);
+      const result = document.getElementById(`${kind}-result`);
+      const path = kind === 'ratings'
+        ? `/members/${encodeURIComponent(field.value)}/ratings`
+        : `/members/${kind}/${encodeURIComponent(field.value)}`;
+      status.textContent = `요청 중 · GET ${path}`;
+      result.textContent = '불러오는 중…';
+      try {
+        const response = await fetch(`${apiBase}${path}`);
+        const body = await response.json();
+        status.textContent = `${response.status} ${response.statusText} · GET ${path}`;
+        result.textContent = JSON.stringify(body, null, 2);
+      } catch (error) {
+        status.textContent = `요청 실패 · GET ${path}`;
+        result.textContent = String(error);
+      }
+    }
+    document.querySelectorAll('form').forEach((form) => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        void request(form.dataset.kind);
+      });
+    });
+    ['nickname', 'email', 'ratings'].forEach((kind) => void request(kind));
+  </script>
+</body>
+</html>

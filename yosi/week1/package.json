@@ -1,0 +1,26 @@
+{
+  "name": "UMCstudy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.4.2",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.4.2",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
+  }
+}

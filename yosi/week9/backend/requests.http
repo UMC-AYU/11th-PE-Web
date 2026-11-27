@@ -1,0 +1,111 @@
+### 서버 먼저 켜기: pnpm start:dev
+### 위에서부터 순서대로 Send Request를 눌러요.
+### seed 회원 비밀번호는 Umc1234! 예요. (sql/seed-week7.sql)
+
+@baseUrl = http://127.0.0.1:8080
+
+
+### ① 로그인 성공 (200) - 응답의 accessToken을 아래 요청들이 자동으로 가져다 써요.
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "movie@umc.com",
+  "password": "Umc1234!"
+}
+
+### ② 로그인 실패 (401) - 없는 이메일이든 틀린 비밀번호든 같은 응답이에요.
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "movie@umc.com",
+  "password": "wrong-password"
+}
+
+### ③ 내 정보 조회 (200)
+GET {{baseUrl}}/members/me
+Authorization: Bearer {{login.response.body.result.accessToken}}
+
+### ④ 토큰 없이 내 정보 조회 (401)
+GET {{baseUrl}}/members/me
+
+### ⑤ 내 정보 수정 (200)
+PATCH {{baseUrl}}/members/me
+Authorization: Bearer {{login.response.body.result.accessToken}}
+Content-Type: application/json
+
+{
+  "nickname": "영화광"
+}
+
+### ⑥ 평점 등록 (201) - 경로에 memberId가 없어요. 두 번 보내면 409라서 다시 할 땐 movieId를 바꿔요.
+# @name createRating
+POST {{baseUrl}}/ratings
+Authorization: Bearer {{login.response.body.result.accessToken}}
+Content-Type: application/json
+
+{
+  "movieId": 27205,
+  "score": 5,
+  "comment": "꿈 속의 꿈이 재밌어요."
+}
+
+### ⑦ 평점 수정 (200) - ⑥에서 만든 평점을 자동으로 고쳐요.
+PATCH {{baseUrl}}/ratings/{{createRating.response.body.result.ratingId}}
+Authorization: Bearer {{login.response.body.result.accessToken}}
+Content-Type: application/json
+
+{
+  "score": 4,
+  "comment": "다시 보니 조금 어려워요."
+}
+
+### ⑧ 다른 회원의 평점 수정 (403) - ratingId 1은 yosi 회원의 평점이에요.
+PATCH {{baseUrl}}/ratings/1
+Authorization: Bearer {{login.response.body.result.accessToken}}
+Content-Type: application/json
+
+{
+  "score": 1
+}
+
+### ⑨ 평점 삭제 (204) - ⑥에서 만든 평점을 지워요.
+DELETE {{baseUrl}}/ratings/{{createRating.response.body.result.ratingId}}
+Authorization: Bearer {{login.response.body.result.accessToken}}
+
+### ───────── 8주차: 즐겨찾기 + 영화 기록 ─────────
+
+### ⑩ 즐겨찾기 등록 (201)
+POST {{baseUrl}}/favorites
+Authorization: Bearer {{login.response.body.result.accessToken}}
+Content-Type: application/json
+
+{
+  "movieId": 550
+}
+
+### ⑪ 내 즐겨찾기 조회 (200)
+GET {{baseUrl}}/favorites
+Authorization: Bearer {{login.response.body.result.accessToken}}
+
+### ⑫ 특정 영화 즐겨찾기 여부 조회 (200)
+GET {{baseUrl}}/favorites/550
+Authorization: Bearer {{login.response.body.result.accessToken}}
+
+### ⑬ 즐겨찾기 해제 (200)
+DELETE {{baseUrl}}/favorites/550
+Authorization: Bearer {{login.response.body.result.accessToken}}
+
+### ⑭ 영화 기록 저장: 평점 + 즐겨찾기를 한 번에 (201) - 두 번 보내면 409라서 다시 할 땐 movieId를 바꿔요.
+POST {{baseUrl}}/movie-records
+Authorization: Bearer {{login.response.body.result.accessToken}}
+Content-Type: application/json
+
+{
+  "movieId": 13,
+  "score": 5,
+  "comment": "인생 영화예요.",
+  "addToFavorites": true
+}

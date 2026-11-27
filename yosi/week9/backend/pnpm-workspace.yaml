@@ -1,0 +1,7 @@
+allowBuilds:
+  # swagger-ui-dist가 함께 설치하는 설치 통계 수집 패키지라 실행하지 않아요.
+  '@scarf/scarf': false
+  # 운영체제별로 미리 빌드된 파일로 동작해서 빌드 스크립트가 필요 없어요.
+  '@swc/core': false
+  # bcrypt는 미리 빌드된 파일(prebuild)로 동작해서 빌드 스크립트를 실행하지 않아요.
+  bcrypt: false
